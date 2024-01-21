@@ -79,12 +79,26 @@ for WebElement in flight_rows:
     duration_text = temp_flight_duration.get_text(strip=True)
     flight_duration.append(duration_text[:-7])
 
-combined_list = list(zip(company_nm, flight_time, flight_duration,lst_prices))
+combined_list = list(map(list, zip(company_nm, flight_time, flight_duration,lst_prices)))
 
 # Print the combined list
+# def flight_dets():
+#     for flight in combined_list:
+#         return(flight)
+
 def flight_dets():
+    flights_info = []
     for flight in combined_list:
-        print(flight)
+        flight_info = f"<tr><td>{flight[0]}</td><td>{flight[1]}</td><td>{flight[2]}</td><td>{flight[3]}</td></tr>"
+        flights_info.append(flight_info)
+    return flights_info
+
+def format_table(flights_info):
+    table_header = "<table border='1'><tr><th>Flight Carrier</th><th>Flight Timing</th><th>Flight Duration</th><th>Flight Price</th></tr>"
+    table_footer = "</table>"
+
+    return f"{table_header}{''.join(flights_info)}{table_footer}"
+    
 
 # email details
 email_sender = os.getenv("email_sender_env")
@@ -92,13 +106,13 @@ email_password = os.getenv("email_password_env")
 email_receiver = os.getenv("email_receiver_env")
     
 subject = "Flight Prices for JFK-BOM flights"
-body = "flight_dets()"
+body = format_table(flight_dets())
 
 em = EmailMessage()
 em['From'] = email_sender
 em['To'] = email_receiver
 em['Subject'] = subject
-em.set_content(body)
+em.set_content(body, subtype='html')  # Set subtype to 'html' for HTML content
 
 context = ssl.create_default_context()
 
