@@ -8,6 +8,12 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from datetime import datetime,timedelta
+from email.message import EmailMessage
+import ssl
+import smtplib
+from dotenv import load_dotenv
+
+load_dotenv() # to load environment variables
 
 # To load website
 options = webdriver.ChromeOptions()
@@ -29,7 +35,7 @@ next_day = current_date + timedelta(days=1)
 url=f'https://www.kayak.com/flights/{from_loc}-{to_loc}/{next_day}?sort=price_a&fs=stops=-2'
 driver.get(url)
 
-# sleep(180)
+sleep(5)
 
 # To close ad pop-up box
 popup_window = '//div[@class = "dDYU-close dDYU-mod-variant-right-corner-inside dDYU-mod-size-default"]'
@@ -76,7 +82,26 @@ for WebElement in flight_rows:
 combined_list = list(zip(company_nm, flight_time, flight_duration,lst_prices))
 
 # Print the combined list
-for flight in combined_list:
-    print(flight)
+def flight_dets():
+    for flight in combined_list:
+        print(flight)
 
-   
+# email details
+email_sender = os.getenv("email_sender_env")
+email_password = os.getenv("email_password_env")
+email_receiver = os.getenv("email_receiver_env")
+    
+subject = "Flight Prices for JFK-BOM flights"
+body = "flight_dets()"
+
+em = EmailMessage()
+em['From'] = email_sender
+em['To'] = email_receiver
+em['Subject'] = subject
+em.set_content(body)
+
+context = ssl.create_default_context()
+
+with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+    smtp.login(email_sender, email_password)
+    smtp.sendmail(email_sender, email_receiver, em.as_string())
