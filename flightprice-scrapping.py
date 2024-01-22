@@ -10,6 +10,8 @@ from email.message import EmailMessage
 import ssl
 import smtplib
 from dotenv import load_dotenv
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 load_dotenv() # to load environment variables
 
@@ -38,13 +40,25 @@ sleep(100)
 
 # To close ad pop-up box
 popup_window = '//div[@class = "dDYU-close dDYU-mod-variant-right-corner-inside dDYU-mod-size-default"]'
-popup_window_elements = driver.find_elements(By.XPATH, popup_window)
-# Check if there is any element in the list
-if popup_window_elements:
-    # Click on the first element in the list
-    popup_window_elements[0].click()
-else:
-    print("No pop-up found")
+# popup_window_elements = driver.find_elements(By.XPATH, popup_window)
+# # Check if there is any element in the list
+# if popup_window_elements:
+#     # Click on the first element in the list
+#     popup_window_elements[0].click()
+# else:
+#     print("No pop-up found")
+
+# Explicitly wait for the pop-up element to be clickable
+try:
+    popup_window_element = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, popup_window))
+    )
+    popup_window_element.click()
+    print("Pop-up closed successfully.")
+except TimeoutException:
+    print("Timed out waiting for the pop-up to be clickable.")
+except Exception as e:
+    print(f"Error closing pop-up: {e}")
 
 
 # Fetch Flight details

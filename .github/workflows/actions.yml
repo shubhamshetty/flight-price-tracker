@@ -1,0 +1,30 @@
+name: Flight Price Tracking
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  scrape-and-email:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+        webdriver-manager update --chrome
+
+    - name: Run Scraper Script
+      run: python flightprice-scrapping.py
+      env:
+        EMAIL_SENDER_ENV: ${{ secrets.EMAIL_SENDER }}
+        EMAIL_PASSWORD_ENV: ${{ secrets.EMAIL_PASSWORD }}
+        EMAIL_RECEIVER_ENV: ${{ secrets.EMAIL_RECEIVER }}
