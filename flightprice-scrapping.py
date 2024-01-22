@@ -91,14 +91,12 @@ def flight_dets():
     for flight in combined_list:
         flight_info = f"<tr><td>{flight[0]}</td><td>{flight[1]}</td><td>{flight[2]}</td><td>{flight[3]}</td></tr>"
         flights_info.append(flight_info)
-    return flights_info
 
-def format_table(flights_info):
     table_header = "<table border='1'><tr><th>Flight Carrier</th><th>Flight Timing</th><th>Flight Duration</th><th>Flight Price</th></tr>"
     table_footer = "</table>"
-
-    return f"{table_header}{''.join(flights_info)}{table_footer}"
-    
+    flights_info_str = "".join(flights_info)
+    body = f"Hi Subscriber,<br><br>{table_header}{flights_info_str}{table_footer}<br><br>Thank You,<br>KoolWave"
+    return body
 
 # email details
 email_sender = os.getenv("email_sender_env")
@@ -106,7 +104,7 @@ email_password = os.getenv("email_password_env")
 email_receiver = os.getenv("email_receiver_env")
     
 subject = "Flight Prices for JFK-BOM flights"
-body = format_table(flight_dets())
+body = flight_dets()
 
 em = EmailMessage()
 em['From'] = email_sender
