@@ -31,6 +31,7 @@ email_receiver_env=recipient_email@gmail.com
 ```python
 from_loc = 'JFK'
 to_loc = 'BOM'
+next_day = '2024-01-23'
 ```
 
 2. Adjust the URL based on your requirements:
