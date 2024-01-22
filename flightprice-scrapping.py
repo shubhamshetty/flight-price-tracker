@@ -33,6 +33,7 @@ next_day = current_date + timedelta(days=1)
 url=f'https://www.kayak.com/flights/{from_loc}-{to_loc}/{next_day}?sort=price_a&fs=stops=-2'
 driver.get(url)
 
+#update time as per the pop-up box
 sleep(5)
 
 # To close ad pop-up box
@@ -53,6 +54,7 @@ lst_prices = []
 company_nm = []
 flight_time = []
 flight_duration = []
+flight_layover = []
 
 for WebElement in flight_rows:
     elementHTML = WebElement.get_attribute('outerHTML')
@@ -72,25 +74,33 @@ for WebElement in flight_rows:
     time_text = temp_flight_time.get_text()
     flight_time.append(time_text [:-2])
 
+    #layover details
+    temp_layover = elementSoup.find("div",{"class":"JWEO"})
+    layover_text = temp_layover.get_text()
+    if layover_text == 'nonstop':
+        flight_layover.append('Nonstop')
+    else:
+        flight_layover.append(layover_text[-3:])
+
     #fligh duration
     temp_flight_duration = elementSoup.find("div",{"class":"xdW8"})
     duration_text = temp_flight_duration.get_text(strip=True)
     flight_duration.append(duration_text[:-7])
 
-combined_list = list(map(list, zip(company_nm, flight_time, flight_duration,lst_prices)))
+combined_list = list(map(list, zip(company_nm, flight_time, flight_duration,flight_layover,lst_prices)))
 
 # Print the combined list
 # def flight_dets():
-#     for flight in combined_list:
-#         return(flight)
+#   for flight in combined_list:
+#       print(flight)
 
 def flight_dets():
     flights_info = []
     for flight in combined_list:
-        flight_info = f"<tr><td>{flight[0]}</td><td>{flight[1]}</td><td>{flight[2]}</td><td>{flight[3]}</td></tr>"
+        flight_info = f"<tr><td>{flight[0]}</td><td>{flight[1]}</td><td>{flight[2]}</td><td>{flight[3]}</td><td>{flight[4]}</td></tr>"
         flights_info.append(flight_info)
 
-    table_header = "<table border='1'><tr><th>Flight Carrier</th><th>Flight Timing</th><th>Flight Duration</th><th>Flight Price</th></tr>"
+    table_header = "<table border='1'><tr><th>Flight Carrier</th><th>Flight Timing</th><th>Flight Duration</th><th>Flight Layover</th><th>Flight Price</th></tr>"
     table_footer = "</table>"
     flights_info_str = "".join(flights_info)
     body = f"Hi Subscriber,<br><br>{table_header}{flights_info_str}{table_footer}<br><br>Thank You,<br>KoolWave"
