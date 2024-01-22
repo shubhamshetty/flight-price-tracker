@@ -34,7 +34,7 @@ url=f'https://www.kayak.com/flights/{from_loc}-{to_loc}/{next_day}?sort=price_a&
 driver.get(url)
 
 #update time as per the pop-up box
-sleep(5)
+sleep(100)
 
 # To close ad pop-up box
 popup_window = '//div[@class = "dDYU-close dDYU-mod-variant-right-corner-inside dDYU-mod-size-default"]'
