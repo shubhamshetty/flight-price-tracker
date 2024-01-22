@@ -9,9 +9,10 @@ from datetime import datetime,timedelta
 from email.message import EmailMessage
 import ssl
 import smtplib
-from dotenv import load_dotenv
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from dotenv import load_dotenv
 
 load_dotenv() # to load environment variables
 
