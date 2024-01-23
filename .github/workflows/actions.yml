@@ -21,6 +21,7 @@ jobs:
       run: |
         pip install -r requirements.txt
         python -m webdriver_manager update --chrome
+        python -m webdriver_manager.chrome --linkpath ~/.local/bin
 
     - name: Run Scraper Script
       run: python flightprice-scrapping.py
