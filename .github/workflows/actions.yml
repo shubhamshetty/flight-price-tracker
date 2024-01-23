@@ -20,7 +20,7 @@ jobs:
     - name: Install Dependencies
       run: |
         pip install -r requirements.txt
-        webdriver-manager update --chrome
+        python -m webdriver_manager update --chrome
 
     - name: Run Scraper Script
       run: python flightprice-scrapping.py
